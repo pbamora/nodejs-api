@@ -1,10 +1,15 @@
-import { Category } from "../model/entities";
+import { Request, Response } from "express";
 import { ICategoryProvider } from "../model/provider";
 
 export class ListCategoryUseCaseController {
-  constructor(private categoryProvider: ICategoryProvider) { }
+  constructor(private categoryProvider: ICategoryProvider) {}
 
-  execute(): Category[] {
-    return this.categoryProvider.list()
+  handle(_: Request, reply: Response): void {
+    try {
+      const response = this.categoryProvider.list();
+      reply.status(201).send(response).json();
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

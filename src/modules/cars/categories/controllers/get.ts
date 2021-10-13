@@ -1,22 +1,17 @@
-import { Category } from "../model/entities";
+import { Request, Response } from "express";
 import { ICategoryProvider } from "../model/provider";
-import { CategoriesProvider } from "../provider/provider";
 
-interface IRequest {
-  name?: string
-  id: string
-}
+export class GetCategoryUseCaseController {
+  constructor(private categoryProvider: ICategoryProvider) {}
 
-export class FindOneCategoryUseCaseController {
-  constructor(private categoryProvider: ICategoryProvider) { }
+  handle(req: Request, reply: Response): void {
+    const { id } = req.params;
 
-  execute({ id }: IRequest): Category {
-    const category = this.categoryProvider.findOne(id)
-
-    if (!category) {
-      throw new Error('Category not exists!1');
+    try {
+      const response = this.categoryProvider.findOne(id);
+      reply.status(201).send(response).json();
+    } catch (error) {
+      console.log(error);
     }
-
-    return category
   }
 }

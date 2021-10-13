@@ -1,20 +1,23 @@
+import { Request, Response } from "express";
 import { ICategoryProvider } from "../model/provider";
 
-interface IRequest {
-  name: string
-  description: string
-}
-
 export class CreateCategoryUseCaseController {
-  constructor(private categoryProvider: ICategoryProvider) { }
+  constructor(private categoryProvider: ICategoryProvider) {}
 
-  execute({ description, name }: IRequest): void {
-    const nameAlreadyExists = this.categoryProvider.findByName(name)
+  handle(req: Request, reply: Response): void {
+    const { name, description } = req.body;
+    const nameAlreadyExists = this.categoryProvider.findByName(name);
 
     if (nameAlreadyExists) {
-      throw new Error('Category already exists');
+      reply.status(400).send({ error: "Category name already exists!" });
     }
 
-    this.categoryProvider.create({ name, description })
+    try {
+      this.categoryProvider.create({ name, description });
+
+      reply.status(201).send({ message: "Category created!" });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
