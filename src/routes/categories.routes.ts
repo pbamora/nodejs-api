@@ -10,8 +10,7 @@ import { CategoriesProvider } from "../modules/cars/categories/provider/provider
 const categoriesRoutes = Router();
 const categoryProvider = new CategoriesProvider();
 const createCategoryUseCase = new CreateCategoryUseCase(categoryProvider);
-const listCategoryUseCase = new ListCategoryUseCase(categoryProvider)
-
+const listCategoryUseCase = new ListCategoryUseCase(categoryProvider);
 
 const createCategoryUseCaseController = new CreateCategoryUseCaseController(
   createCategoryUseCase

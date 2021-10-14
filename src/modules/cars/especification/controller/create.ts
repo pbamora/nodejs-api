@@ -1,19 +1,14 @@
 import { Request, Response } from "express";
-import { ISpecificationProvider } from "../model/provider";
+import { CreateSpecificationUseCase } from "../cases/create";
 
 export class CreateSpecificationUseCaseController {
-  constructor(private specificationProvider: ISpecificationProvider) {}
+  constructor(private createSpecificationUseCase: CreateSpecificationUseCase) {}
 
   handle(req: Request, reply: Response): void {
     const { name, description } = req.body;
-    const nameAlreadyExists = this.specificationProvider.findByName(name);
-
-    if (nameAlreadyExists) {
-      reply.status(400).send({ error: "Specification name already exists!" });
-    }
 
     try {
-      this.specificationProvider.create({ name, description });
+      this.createSpecificationUseCase.execute(name, description);
 
       reply.status(201).send({ message: "Specification created!" });
     } catch (error) {

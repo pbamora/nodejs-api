@@ -1,20 +1,15 @@
 import { Request, Response } from "express";
-import { ICategoryProvider } from "../model/provider";
+import { UpdateCategoryUseCase } from "../cases/update";
 
 export class UpdateCategoryUseCaseController {
-  constructor(private categoryProvider: ICategoryProvider) {}
+  constructor(private updateCategoryUseCase: UpdateCategoryUseCase) {}
 
   handle(req: Request, reply: Response): void {
     const { name, description } = req.body;
     const { id } = req.params;
-    const nameAlreadyExists = this.categoryProvider.findByName(name);
-
-    if (nameAlreadyExists) {
-      reply.status(400).send({ error: "Category name already exists!" });
-    }
 
     try {
-      this.categoryProvider.updateOne(id, { name, description });
+      this.updateCategoryUseCase.execute(id, name, description);
 
       reply.status(201).send({ message: "Category updated!" });
     } catch (error) {

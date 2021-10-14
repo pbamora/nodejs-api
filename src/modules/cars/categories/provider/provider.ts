@@ -1,46 +1,54 @@
-import { Category } from "../model/entities"
-import { ICategoryProvider } from "../model/provider"
+import { Category } from "../model/entities";
+import { ICategoryProvider } from "../model/provider";
 
 type Payload = {
-  name: string
-  description: string
-}
+  name: string;
+  description: string;
+};
 
 export class CategoriesProvider implements ICategoryProvider {
-  private categories: Category[]
+  private categories: Category[];
+
+  private static INSTANCE: CategoriesProvider;
 
   constructor() {
-    this.categories = []
+    this.categories = [];
+  }
+
+  public static getInstance(): CategoriesProvider {
+    if (!CategoriesProvider.INSTANCE) {
+      CategoriesProvider.INSTANCE = new CategoriesProvider();
+    }
+    return CategoriesProvider.INSTANCE;
   }
 
   create(payload: Payload): void {
-    const category = new Category()
-    Object.assign(category, payload)
+    const category = new Category();
+    Object.assign(category, payload);
 
-    this.categories.push(category)
+    this.categories.push(category);
   }
 
   findByName(name: string): Category {
-    return this.categories.find(s => s.name === name)
+    return this.categories.find((s) => s.name === name);
   }
 
   list(): Category[] {
-    return this.categories
+    return this.categories;
   }
 
   findOne(id: string): Category {
-    let category: Category
+    let category: Category;
 
     if (id) {
-      category = this.categories.find(s => s.id === id)
-      return category
+      category = this.categories.find((s) => s.id === id);
+      return category;
     }
-
   }
 
   updateOne(id: string, payload: Payload): void {
-    const index = this.categories.findIndex(s => s.id === id)
+    const index = this.categories.findIndex((s) => s.id === id);
 
-    Object.assign(this.categories[index], payload)
+    Object.assign(this.categories[index], payload);
   }
 }
