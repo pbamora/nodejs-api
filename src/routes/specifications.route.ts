@@ -37,6 +37,7 @@ const updateSpecificationUseCaseController =
 
 
 export const specificationRoutes = async (server: FastifyInstance, _: any, done: any) => {
+
   server.post("/specification", async (req, reply) => {
     createSpecificationUseCaseController.handle(req, reply);
   });
@@ -52,5 +53,7 @@ export const specificationRoutes = async (server: FastifyInstance, _: any, done:
   server.put("/specification/:id", async (req, reply) => {
     updateSpecificationUseCaseController.handle(req, reply);
   });
+
+  done()
 
 }
