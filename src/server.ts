@@ -1,9 +1,24 @@
-import express from "express";
-import { router } from "./routes";
+import Fastify from "fastify";
+import { jsonParser } from "./infra/parsers";
+import { registerRoutes } from "./routes";
 
-const app = express();
+const fastify = Fastify({
+  logger: true
+})
 
-app.use(express.json());
-app.use(router);
+fastify.addContentTypeParser(
+  'application/json',
+  { parseAs: 'string' },
+  jsonParser,
+)
 
-app.listen(3333, () => console.log("Server listen in port 3333"));
+registerRoutes(fastify)
+
+fastify.listen(3333, (err, adress) => {
+  if (err) {
+    fastify.log.error(err)
+    process.exit
+  }
+
+  console.log(`Server listen in ${adress}`)
+})

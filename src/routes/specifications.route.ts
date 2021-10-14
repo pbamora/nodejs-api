@@ -1,6 +1,4 @@
-import { Router } from "express";
-import { ListCategoryUseCase } from "../modules/cars/categories/cases/list";
-import { UpdateCategoryUseCase } from "../modules/cars/categories/cases/update";
+import { FastifyInstance } from "fastify";
 import { CreateSpecificationUseCase } from "../modules/cars/especification/cases/create";
 import { GetSpecificationUseCase } from "../modules/cars/especification/cases/get";
 import { ListSpecificationUseCase } from "../modules/cars/especification/cases/lists";
@@ -11,7 +9,6 @@ import { ListSpecificationUseCaseController } from "../modules/cars/especificati
 import { UpdateSpecificationUseCaseController } from "../modules/cars/especification/controller/update";
 import { EspecificationProvider } from "../modules/cars/especification/provider/provider";
 
-const especificationRoutes = Router();
 const especificationProvider = new EspecificationProvider();
 
 const createSpecificationUseCase = new CreateSpecificationUseCase(
@@ -38,20 +35,22 @@ const listSpecificationUseCaseController =
 const updateSpecificationUseCaseController =
   new UpdateSpecificationUseCaseController(updateSpecificationUseCase);
 
-especificationRoutes.post("/", (req, reply) => {
-  createSpecificationUseCaseController.handle(req, reply);
-});
 
-especificationRoutes.get("/", (_, reply) => {
-  listSpecificationUseCaseController.handle(_, reply);
-});
+export const specificationRoutes = async (server: FastifyInstance, _: any, done: any) => {
+  server.post("/specification", async (req, reply) => {
+    createSpecificationUseCaseController.handle(req, reply);
+  });
 
-especificationRoutes.get("/:id", (req, reply) => {
-  getSpecificationUseCaseController.handle(req, reply);
-});
+  server.get("/specification", async (_, reply) => {
+    getSpecificationUseCaseController.handle(_, reply);
+  });
 
-especificationRoutes.put("/:id", (req, reply) => {
-  updateSpecificationUseCaseController.handle(req, reply);
-});
+  server.get("/specification/:id", async (req, reply) => {
+    listSpecificationUseCaseController.handle(req, reply);
+  });
 
-export { especificationRoutes };
+  server.put("/specification/:id", async (req, reply) => {
+    updateSpecificationUseCaseController.handle(req, reply);
+  });
+
+}

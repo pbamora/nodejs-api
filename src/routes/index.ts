@@ -1,8 +1,8 @@
-import { Router } from "express";
+import { FastifyInstance } from "fastify";
 import { categoriesRoutes } from "./categories.routes";
-import { especificationRoutes } from "./specifications.route";
+import { specificationRoutes } from "./specifications.route";
 
-export const router = Router();
-
-router.use("/categories", categoriesRoutes);
-router.use("/specifications", especificationRoutes);
+export const registerRoutes = (fastify: FastifyInstance) => {
+  fastify.register(categoriesRoutes)
+  fastify.register(specificationRoutes)
+}

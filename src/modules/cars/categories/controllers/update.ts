@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
+import { FastifyReply, FastifyRequest } from "fastify";
 import { UpdateCategoryUseCase } from "../cases/update";
 
 export class UpdateCategoryUseCaseController {
-  constructor(private updateCategoryUseCase: UpdateCategoryUseCase) {}
+  constructor(private updateCategoryUseCase: UpdateCategoryUseCase) { }
 
-  handle(req: Request, reply: Response): void {
-    const { name, description } = req.body;
-    const { id } = req.params;
+  handle(req: FastifyRequest, reply: FastifyReply): void {
+    const { name, description } = req.body as any;
+    const { id } = req.params as any;
 
     try {
       this.updateCategoryUseCase.execute(id, name, description);
